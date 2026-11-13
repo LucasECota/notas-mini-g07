@@ -2,7 +2,7 @@
 
 
 def media_ponderada(notas, pesos):
-    """Devolve a média das notas, cada uma com o seu peso.
+    """Devolve a média das notas, cada uma com o seu peso. t
 
     Exemplos:
         media_ponderada([5, 7], [1, 1])  ->  6.0
