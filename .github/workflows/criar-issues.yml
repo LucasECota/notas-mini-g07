@@ -1,0 +1,33 @@
+# Cria as issues da prática a partir dos arquivos em pratica/issues/.
+# Rodar uma vez só, logo depois de criar o repositório do grupo:
+# aba Actions > "Criar issues da prática" > Run workflow.
+name: Criar issues da prática
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  criar:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Criar as issues (só se o repositório ainda não tiver nenhuma)
+        run: |
+          existentes=$(gh issue list --state all --limit 1 --json number --jq 'length')
+          if [ "$existentes" != "0" ]; then
+            echo "O repositório já tem issues; nada a fazer."
+            exit 0
+          fi
+          for arquivo in pratica/issues/*.md; do
+            titulo=$(head -n 1 "$arquivo" | sed 's/^# //')
+            tail -n +2 "$arquivo" > corpo.md
+            gh issue create --title "$titulo" --body-file corpo.md
+            echo "Criada: $titulo"
+          done

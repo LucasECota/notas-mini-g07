@@ -1,0 +1,21 @@
+# Integração contínua do notas-mini.
+# Roda a cada push na main e a cada pull request; também pode ser
+# disparado à mão (aba Actions > CI > Run workflow).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  testes:                      # este nome ("testes") é o da verificação exigida na main
+    runs-on: ubuntu-latest     # máquina limpa, criada a cada execução
+    steps:
+      - uses: actions/checkout@v7          # baixa o código do commit
+      - uses: actions/setup-python@v7      # prepara o Python
+        with:
+          python-version: '3.12'
+      - name: Rodar os testes
+        run: python -m unittest -v         # acha e roda tests/test_*.py; falha se um teste falhar
